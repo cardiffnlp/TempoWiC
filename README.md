@@ -9,7 +9,7 @@ The TempoWiC dataset is described in the following paper, accepted to COLING 202
 https://arxiv.org/abs/2209.07216 
 
 
-Below you may find some details about each file contained in this folder.
+Below you may find some details about the contents of this repository.
 
 Code for fine-tuning and similarity baselines will be added soon.
 
@@ -62,7 +62,7 @@ Labels for test instances will remain hidden.
 Outputs instance data stored as .jl in a more readable format. For easier inspection.
 
 ```bash
-python pprint.py trial.data.jl
+python pprint.py data/trial.data.jl
 ```
 
 
