@@ -83,4 +83,4 @@ A simple python script to generate official scores for the task. Reports Accurac
 python score.py predictions/trial.random-preds.tsv data/trial.gold.tsv
 ```
 
-Predictions need to be stored in a .tsv file where each line corresponds to the tweet id of the instance and 0 (if the meaning of the target word has not changed) or 1 (if the meaning of the target word is different in both tweets). See "predictions/trial.random-preds.tsv" for an example.
+Predictions need to be stored in a .tsv file where each line corresponds to the tweet id of the instance and 1 (if the meaning of the target word has not changed) or 0 (if the meaning of the target word is different in both tweets). See "predictions/trial.random-preds.tsv" for an example.
