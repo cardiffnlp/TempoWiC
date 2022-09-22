@@ -1,34 +1,52 @@
 """
-A simple python script to generate official scores for the task.
-Reports accuracy and macro-f1.
+A simple python script to generate official scores for the task. Reports accuracy and macro-f1.
 Requires a single id / label tab-separated prediction per line.
 Use label 0 for False and 1 for True.
 
-This script should be compatible with Python 2.7+ (important for Codalab)
+This script should be compatible with Python 2.7+
 """
 
 import sys
 
 
-def f1_macro(gold, preds):
+def f1_macro(gold, preds, debug=False):
     # unweighted, penalizes recall for missing instances
     
     def f1(gold, preds, label):
 
-        tp, fp, fn, unknown = 0.0, 0.0, 0.0, 0.0
+        tp, fp, fn, tn, unknown = 0.0, 0.0, 0.0, 0.0, 0.0
         for idx in range(len(gold)):
-            if (gold[idx] == label) and (preds[idx] == label):
+            if (preds[idx]==-1):
+                unknown+=1
+            elif (gold[idx] == label) and (preds[idx] == label):
                 tp += 1
-            elif (gold[idx] != label) and (preds[idx] == label):
-                fp += 1
             elif (preds[idx] != label) and (gold[idx] == label):
                 fn += 1
-            elif (preds[idx]==-1):
-                unknown+=1
+            elif (gold[idx] != label) and (preds[idx] == label):
+                fp += 1
+            elif (gold[idx] != label) and (preds[idx] != label):
+                tn += 1
+        try:
+            precision = tp/(tp+fp)
+            
+            recall = tp/(tp+fn+unknown)
 
-        precision = tp/(tp+fp)
-        recall = tp/(tp+fn+unknown)
-        f1 = 2 * (precision * recall) / (precision + recall)
+            f1 = 2 * (precision * recall) / (precision + recall)
+        except ZeroDivisionError:
+            f1 = 0
+
+        if debug:
+            print('label:%d' % label)
+            print('tp:%f' % tp)
+            print('fn:%f' % fn)
+            print('fp:%f' % fp)
+            print('tn:%f' % tn)
+            print('unknown:%f' % unknown)
+            print('sum:%f' % (tp+fn+fp+tn+unknown))
+            print('precision:%f' % precision)
+            print('recall:%f' % recall)
+            print('f1:%f' % f1)
+        
         return f1
 
     return sum([f1(gold, preds, label) for label in [0, 1]])/2
@@ -69,21 +87,19 @@ if __name__ == '__main__':
     print('Loaded %d prediction labels.' % len(pred_labels_dict))
     print('Loaded %d gold labels.' % len(gold_labels_dict))
 
-    """
-    try:
-        assert set(list(pred_labels_dict.keys())) == set(list(gold_labels_dict.keys()))
-    except AssertionError:
-        print('Warning: Mismatched instance ids.')
-    """
+    # try:
+    #     assert set(list(pred_labels_dict.keys())) == set(list(gold_labels_dict.keys()))
+    # except AssertionError:
+    #     print('Warning: Mismatched instance ids.')
+
 
     pred_labels, gold_labels = [], []
     for inst_id in sorted(gold_labels_dict.keys()):
+        gold_labels.append(gold_labels_dict[inst_id])
         try:
             pred_labels.append(pred_labels_dict[inst_id])
-            gold_labels.append(gold_labels_dict[inst_id])
         except KeyError:
             pred_labels.append(-1)  # missing instances labeled with -1
-            continue
 
     print("Accuracy: %.4f" % accuracy(gold_labels, pred_labels))
     print("Macro-F1: %.4f" % f1_macro(gold_labels, pred_labels))
