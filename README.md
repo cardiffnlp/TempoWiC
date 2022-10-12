@@ -6,7 +6,7 @@ For more details about the task, please visit:
 https://sites.google.com/view/evonlp/shared-task
 
 The TempoWiC dataset is described in the following paper, accepted to COLING 2022:
-https://arxiv.org/abs/2209.07216 
+https://aclanthology.org/2022.coling-1.296/
 
 
 Below you may find some details about the contents of this repository.
