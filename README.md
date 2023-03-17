@@ -50,6 +50,9 @@ This starting kit includes the following sets:
 - Test (10,000 instances, includes dummy instances to discourage cheating)
 
 
+UPDATE 2023/03/17: Gold test labels are now available (data/test.gold.tsv - without entries for dummy instances).
+
+
 ## Labels (data/*.labels.tsv)
 
 Contains gold labels for each instance. One id/label per line, following the format "`<instance id><tab><0 if False, 1 if True>`".
